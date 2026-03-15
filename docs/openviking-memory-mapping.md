@@ -32,12 +32,15 @@ Mirror the Swarm Architect structure in OpenViking.
 ```text
 viking://
 ├── resources/
-│   └── projects/
-│       └── <repo>/
-│           ├── specs/
-│           ├── architecture/
-│           ├── docs/
-│           └── code-index/
+│   ├── projects/
+│   │   └── <repo>/
+│   │       ├── specs/
+│   │       ├── architecture/
+│   │       ├── docs/
+│   │       └── code-index/
+│   └── upstreams/
+│       ├── agency-agents/
+│       └── impeccable/
 └── agent/
     └── memories/
         └── swarms/
@@ -69,6 +72,13 @@ Use one of these scopes per task or planning artifact:
 - `task`
 - `validation`
 - `lesson`
+
+## Upstream resource roots
+When bootstrap has prepared upstream visibility, use these as the default resource roots:
+- `viking://resources/upstreams/agency-agents`
+- `viking://resources/upstreams/impeccable`
+
+These roots are intended to become the stable OpenViking-facing identities for the cloned upstream repos, even before full ingestion automation exists.
 
 ## Suggested task shape
 ```json

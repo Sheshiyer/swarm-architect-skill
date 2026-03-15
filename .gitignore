@@ -1,3 +1,4 @@
 .external/
 .swarm-bootstrap.json
 .swarm-openviking-paths.json
+.swarm-upstream-resources.json

@@ -23,6 +23,7 @@ Prepare OpenViking bootstrap state for a repository:
 - resolves config path and mode
 - writes a starter ov.conf if missing (unless --dry-run)
 - generates .swarm-openviking-paths.json with deterministic URI patterns
+- includes upstream resource roots when .swarm-upstream-resources.json is present
 EOF
       exit 0
       ;;
@@ -98,6 +99,7 @@ PY
 )"
 MEMORY_ROOT="${MEMORY_ROOT_TEMPLATE//\$\{repo\}/$REPO_NAME}"
 PATHS_FILE="$REPO_ROOT/$PATHS_FILE_RAW"
+UPSTREAM_REGISTRY_FILE="$REPO_ROOT/.swarm-upstream-resources.json"
 
 has_cmd() {
   command -v "$1" >/dev/null 2>&1 && echo yes || echo no
@@ -118,6 +120,11 @@ echo "- openviking-server: $OPENVIKING_SERVER_PRESENT"
 echo "- ov CLI: $OV_CLI_PRESENT"
 echo "- OPENVIKING_CONFIG_FILE should point to: $CONFIG_PATH"
 echo "- memory root: $MEMORY_ROOT"
+if [[ -f "$UPSTREAM_REGISTRY_FILE" ]]; then
+  echo "- upstream registry: $UPSTREAM_REGISTRY_FILE"
+else
+  echo "- upstream registry: not found (run bootstrap-upstreams.sh first for upstream visibility)"
+fi
 
 if [[ "$MODE" == "local" && ! -f "$CONFIG_PATH" ]]; then
   echo "- OpenViking config missing: $CONFIG_PATH"
@@ -152,23 +159,37 @@ EOF
   fi
 fi
 
-python3 - "$PATHS_FILE" "$REPO_NAME" "$MEMORY_ROOT" "$DRY_RUN" <<'PY'
+python3 - "$PATHS_FILE" "$REPO_NAME" "$MEMORY_ROOT" "$DRY_RUN" "$UPSTREAM_REGISTRY_FILE" <<'PY'
 import json, os, sys
-paths_file, repo_name, memory_root, dry_run = sys.argv[1:5]
+paths_file, repo_name, memory_root, dry_run, upstream_registry_file = sys.argv[1:6]
 registry = {
-  "repo": repo_name,
-  "memoryRoot": memory_root,
-  "paths": {
-    "planning": f"{memory_root}/planning",
-    "phasePattern": f"{memory_root}/phases/{{phase}}",
-    "wavePattern": f"{memory_root}/phases/{{phase}}/{{wave}}",
-    "swarmPattern": f"{memory_root}/phases/{{phase}}/{{wave}}/{{swarm}}",
-    "taskPattern": f"{memory_root}/tasks/{{taskId}}",
-    "validationPattern": f"{memory_root}/validations/{{validationId}}",
-    "handoffRoot": f"{memory_root}/handoffs",
-    "lessonsRoot": f"{memory_root}/lessons"
-  }
+  'repo': repo_name,
+  'memoryRoot': memory_root,
+  'paths': {
+    'planning': f'{memory_root}/planning',
+    'phasePattern': f'{memory_root}/phases/{{phase}}',
+    'wavePattern': f'{memory_root}/phases/{{phase}}/{{wave}}',
+    'swarmPattern': f'{memory_root}/phases/{{phase}}/{{wave}}/{{swarm}}',
+    'taskPattern': f'{memory_root}/tasks/{{taskId}}',
+    'validationPattern': f'{memory_root}/validations/{{validationId}}',
+    'handoffRoot': f'{memory_root}/handoffs',
+    'lessonsRoot': f'{memory_root}/lessons',
+  },
 }
+if os.path.exists(upstream_registry_file):
+    with open(upstream_registry_file, 'r', encoding='utf-8') as fh:
+        upstream_registry = json.load(fh)
+    upstreams = upstream_registry.get('upstreams', {})
+    registry['upstreams'] = {}
+    for name, meta in upstreams.items():
+        registry['upstreams'][name] = {
+            'enabled': meta.get('enabled', False),
+            'present': meta.get('present', False),
+            'localPath': meta.get('localPath'),
+            'absolutePath': meta.get('absolutePath'),
+            'resourceUri': meta.get('resourceUri', f'viking://resources/upstreams/{name}'),
+            'profilesRoot': meta.get('profilesRoot', f'viking://resources/upstreams/{name}'),
+        }
 print(json.dumps(registry, indent=2))
 if dry_run != 'true':
     with open(paths_file, 'w', encoding='utf-8') as fh:
@@ -176,4 +197,5 @@ if dry_run != 'true':
         fh.write('\n')
 PY
 
+echo "- next step: optionally index upstream repos into OpenViking resources, e.g. viking://resources/upstreams/..."
 echo "Done."

@@ -18,7 +18,8 @@ while [[ $# -gt 0 ]]; do
       cat <<'EOF'
 Usage: scripts/bootstrap-upstreams.sh [--dry-run] [--repo-root <path>]
 
-Clone upstream specialist/methodology repos once into .external/.
+Clone upstream specialist/methodology repos once into .external/ and emit
+.swarm-upstream-resources.json so OpenViking bootstrap can reference them.
 Uses .swarm-bootstrap.json when present, otherwise .swarm-bootstrap.example.json.
 EOF
       exit 0
@@ -114,6 +115,8 @@ IMPECCABLE_PATH_RAW="$(json_get 'upstreams.impeccable.path' '.external/impeccabl
 IMPECCABLE_BRANCH="$(json_get 'upstreams.impeccable.branch' 'main')"
 IMPECCABLE_PATH="$(expand_path "$IMPECCABLE_PATH_RAW")"
 
+REGISTRY_PATH="$REPO_ROOT/.swarm-upstream-resources.json"
+
 echo "Swarm bootstrap upstreams"
 echo "- repo root: $REPO_ROOT"
 echo "- config: $CONFIG_FILE"
@@ -122,4 +125,50 @@ echo "- dry run: $DRY_RUN"
 clone_once "agency-agents" "$AGENCY_ENABLED" "$AGENCY_REPO" "$AGENCY_PATH" "$AGENCY_BRANCH"
 clone_once "impeccable" "$IMPECCABLE_ENABLED" "$IMPECCABLE_REPO" "$IMPECCABLE_PATH" "$IMPECCABLE_BRANCH"
 
+python3 - "$REGISTRY_PATH" "$REPO_ROOT" "$DRY_RUN" \
+  "$AGENCY_ENABLED" "$AGENCY_REPO" "$AGENCY_PATH_RAW" "$AGENCY_PATH" \
+  "$IMPECCABLE_ENABLED" "$IMPECCABLE_REPO" "$IMPECCABLE_PATH_RAW" "$IMPECCABLE_PATH" <<'PY'
+import json, os, sys
+(
+    registry_path,
+    repo_root,
+    dry_run,
+    agency_enabled,
+    agency_repo,
+    agency_path_raw,
+    agency_path,
+    impeccable_enabled,
+    impeccable_repo,
+    impeccable_path_raw,
+    impeccable_path,
+) = sys.argv[1:12]
+
+def make_entry(name, enabled, repo, local_path_raw, local_path_abs):
+    present = os.path.isdir(os.path.join(local_path_abs, '.git'))
+    return {
+        'name': name,
+        'enabled': enabled == 'true',
+        'present': present,
+        'repo': repo,
+        'localPath': local_path_raw,
+        'absolutePath': local_path_abs,
+        'resourceUri': f'viking://resources/upstreams/{name}',
+        'profilesRoot': f'viking://resources/upstreams/{name}',
+    }
+
+registry = {
+    'repoRoot': repo_root,
+    'upstreams': {
+        'agency-agents': make_entry('agency-agents', agency_enabled, agency_repo, agency_path_raw, agency_path),
+        'impeccable': make_entry('impeccable', impeccable_enabled, impeccable_repo, impeccable_path_raw, impeccable_path),
+    },
+}
+print(json.dumps(registry, indent=2))
+if dry_run != 'true':
+    with open(registry_path, 'w', encoding='utf-8') as fh:
+        json.dump(registry, fh, indent=2)
+        fh.write('\n')
+PY
+
+echo "- upstream registry: $REGISTRY_PATH"
 echo "Done."

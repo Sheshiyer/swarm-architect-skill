@@ -98,8 +98,9 @@ Swarm Architect now includes a **bootstrap layer** for local setup.
 It can:
 - clone `agency-agents` once into `.external/agency-agents`
 - clone `impeccable` once into `.external/impeccable`
+- generate `.swarm-upstream-resources.json` so those repos become OpenViking-visible
 - prepare OpenViking config guidance
-- generate deterministic memory path conventions for the current repo
+- generate deterministic memory path conventions for the current repo, including upstream resource roots when available
 
 Recommended first run:
 
@@ -110,6 +111,7 @@ cp .swarm-bootstrap.example.json .swarm-bootstrap.json
 ```
 
 Bootstrap is **idempotent**: upstreams are cloned once, not re-cloned every run.
+It also emits `.swarm-upstream-resources.json`, which the OpenViking bootstrap uses to include upstream resource roots in `.swarm-openviking-paths.json`.
 
 See:
 - [`docs/bootstrap.md`](./docs/bootstrap.md)

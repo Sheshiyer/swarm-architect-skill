@@ -17,8 +17,9 @@ It helps you:
 ## Files involved
 - `.swarm-bootstrap.example.json` → example config
 - `.swarm-bootstrap.json` → your local config (ignored by git)
+- `.swarm-upstream-resources.json` → generated upstream registry for OpenViking visibility (ignored by git)
 - `.swarm-openviking-paths.json` → generated memory path registry (ignored by git)
-- `scripts/bootstrap-upstreams.sh` → clone-once upstream setup
+- `scripts/bootstrap-upstreams.sh` → clone-once upstream setup + upstream resource registry generation
 - `scripts/bootstrap-openviking.sh` → OpenViking preparation and path generation
 
 ## Recommended first run
@@ -34,6 +35,8 @@ The bootstrap scripts are idempotent:
 - if `.external/agency-agents` already exists, it is not recloned
 - if `.external/impeccable` already exists, it is not recloned
 - if OpenViking config already exists, it is not overwritten unless you choose to edit it
+
+Run `bootstrap-upstreams.sh` first when you want upstream repos to become visible in the generated OpenViking path registry. It now emits `.swarm-upstream-resources.json`, which `bootstrap-openviking.sh` will fold into `.swarm-openviking-paths.json`.
 
 ## OpenViking modes
 The config supports:
@@ -53,7 +56,7 @@ The OpenViking bootstrap script generates a deterministic path registry for the 
 This gives every task and wave a predictable `viking://` home.
 
 ## What bootstrap does not do yet
-This bootstrap layer does **not yet**:
+This bootstrap layer now prepares upstream repos to be **OpenViking-visible** by generating deterministic resource URIs and path references, but it still does **not yet**:
 - ingest upstream repos into OpenViking automatically
 - write task memory during execution automatically
 - act as a live memory plugin/adapter
