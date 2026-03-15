@@ -17,6 +17,12 @@ entrypoints:
     - runbooks/validation-gate.md
     - runbooks/memory-capture.md
     - runbooks/launch-worker-session.md
+    - runbooks/superset-workspace-bootstrap.md
+  workspaceLifecycle:
+    - .superset/config.json
+    - .superset/setup.sh
+    - .superset/teardown.sh
+    - .superset/config.local.example.json
   templates:
     - templates/discovery-template.md
     - templates/phase-wave-swarm-template.md

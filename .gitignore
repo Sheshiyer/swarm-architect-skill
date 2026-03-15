@@ -2,3 +2,4 @@
 .swarm-bootstrap.json
 .swarm-openviking-paths.json
 .swarm-upstream-resources.json
+.superset/config.local.json

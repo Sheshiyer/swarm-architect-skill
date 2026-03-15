@@ -52,3 +52,13 @@ workflows:
       - templates/cli-session-bootstrap-template.md
       - templates/validation-brief-template.md
       - machine-readable/session-bootstrap-schema.yaml
+  superset-workspace-lifecycle:
+    useWhen:
+      - Superset workspaces or worktrees are used to launch worker sessions
+      - setup and teardown scripts should materialize local .swarm pointers automatically
+    primaryAssets:
+      - runbooks/superset-workspace-bootstrap.md
+      - .superset/config.json
+      - .superset/setup.sh
+      - .superset/teardown.sh
+      - .superset/config.local.example.json

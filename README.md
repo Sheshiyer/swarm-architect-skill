@@ -73,6 +73,7 @@ OpenViking-ready fields and URI conventions make shared swarm memory explicit an
 | [`machine-readable/`](./machine-readable) | Compact indexes for workflows, profiles, package navigation, and worker session manifests |
 | [`examples/`](./examples) | Concrete examples for plans, waves, and agent assignments |
 | [`docs/`](./docs) | Integration guidance, memory mapping, and bootstrap documentation |
+| [`.superset/`](./.superset) | Superset workspace lifecycle config plus setup/teardown scripts for worker workspaces |
 | [`scripts/`](./scripts) | Install helper, bootstrap helpers, and OpenViking indexing helper |
 | [`.swarm-bootstrap.example.json`](./.swarm-bootstrap.example.json) | Example local bootstrap config |
 | [`icon.svg`](./icon.svg) | UI icon for the skill package |
@@ -260,6 +261,29 @@ Key assets:
 - [`machine-readable/session-bootstrap-schema.yaml`](./machine-readable/session-bootstrap-schema.yaml)
 
 This layer makes worker startup deterministic by generating scoped handoff packets instead of relying on chat continuity.
+
+## Superset workspace lifecycle
+
+Swarm Architect now includes a repo-level **Superset integration** for workspace setup and teardown automation.
+
+Use it when you want Superset to:
+1. create a worker workspace,
+2. run setup automatically,
+3. materialize local `.swarm/` pointers to the correct worker packet,
+4. and clean up conservatively on workspace deletion.
+
+Key assets:
+- [`.superset/config.json`](./.superset/config.json)
+- [`.superset/setup.sh`](./.superset/setup.sh)
+- [`.superset/teardown.sh`](./.superset/teardown.sh)
+- [`.superset/config.local.example.json`](./.superset/config.local.example.json)
+- [`runbooks/superset-workspace-bootstrap.md`](./runbooks/superset-workspace-bootstrap.md)
+
+Recommended flow:
+1. Swarm Architect generates `.swarm/shared/*` and `.swarm/workers/*` handoff artifacts at the repo root.
+2. Superset creates a workspace and runs `setup.sh`.
+3. `setup.sh` uses `SUPERSET_ROOT_PATH` and `SUPERSET_WORKSPACE_NAME` to copy the correct bootstrap files into workspace-local `.swarm/` paths.
+4. The worker runtime starts by reading `.swarm/session-bootstrap.md` and `.swarm/shared-contracts.md`.
 
 ## Concrete operating model
 

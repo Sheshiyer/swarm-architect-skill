@@ -69,17 +69,18 @@ When this skill is invoked, load these files before producing the plan.
 17. `runbooks/validation-gate.md` when validation requirements need to be explicit before execution
 18. `runbooks/memory-capture.md` when OpenViking-compatible memory records must be shaped
 19. `runbooks/launch-worker-session.md` when a fresh worker CLI session must be launched from a scoped handoff packet
+20. `runbooks/superset-workspace-bootstrap.md` when Superset setup/teardown automation should provision worker workspaces from generated packets
 
 ### Usage references
-20. `examples/sample-plan.md` when the user asks for a sample full plan
-21. `examples/sample-wave.md` when the user asks for a detailed wave example
-22. `examples/sample-agent-assignment.md` when the user asks how agents should be split
-23. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
-24. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
-25. `machine-readable/reference.yaml` when a compact package map is needed
-26. `machine-readable/workflows.yaml` when workflow selection is ambiguous
-27. `machine-readable/profiles.yaml` when role/profile overlays need a compact summary
-28. `machine-readable/session-bootstrap-schema.yaml` when generating launch manifests or worker startup packets
+21. `examples/sample-plan.md` when the user asks for a sample full plan
+22. `examples/sample-wave.md` when the user asks for a detailed wave example
+23. `examples/sample-agent-assignment.md` when the user asks how agents should be split
+24. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
+25. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
+26. `machine-readable/reference.yaml` when a compact package map is needed
+27. `machine-readable/workflows.yaml` when workflow selection is ambiguous
+28. `machine-readable/profiles.yaml` when role/profile overlays need a compact summary
+29. `machine-readable/session-bootstrap-schema.yaml` when generating launch manifests or worker startup packets
 
 ## Adjacent Skills to Leverage
 
@@ -98,6 +99,7 @@ Before planning, choose the closest operating path:
 - use `runbooks/wave-close.md` when assessing integration readiness at a wave boundary
 - use `runbooks/memory-capture.md` when OpenViking-compatible records or retrieval paths must be shaped
 - use `runbooks/launch-worker-session.md` when a fresh Codex, Copilot, Gemini, or similar CLI session must be started from a scoped handoff packet
+- use `runbooks/superset-workspace-bootstrap.md` when Superset should provision and clean up the worker workspace automatically
 
 If workflow selection is ambiguous, consult `machine-readable/workflows.yaml` before proceeding.
 

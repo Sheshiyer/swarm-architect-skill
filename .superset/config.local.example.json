@@ -1,0 +1,9 @@
+{
+  "setup": {
+    "before": ["echo 'custom pre-setup step'"],
+    "after": ["./.superset/my-post-setup.sh"]
+  },
+  "teardown": {
+    "after": ["./.superset/my-cleanup.sh"]
+  }
+}
