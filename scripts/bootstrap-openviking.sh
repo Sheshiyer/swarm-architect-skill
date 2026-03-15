@@ -105,8 +105,18 @@ has_cmd() {
   command -v "$1" >/dev/null 2>&1 && echo yes || echo no
 }
 
+resolve_openviking_cli() {
+  if command -v openviking >/dev/null 2>&1; then
+    echo openviking
+  elif command -v ov >/dev/null 2>&1; then
+    echo ov
+  else
+    echo ""
+  fi
+}
+
 OPENVIKING_SERVER_PRESENT="$(has_cmd openviking-server)"
-OV_CLI_PRESENT="$(has_cmd ov)"
+OPENVIKING_CLI_BIN="$(resolve_openviking_cli)"
 PYTHON_PRESENT="$(has_cmd python3)"
 
 echo "Swarm bootstrap OpenViking"
@@ -117,7 +127,7 @@ echo "- mode: $MODE"
 echo "- dry run: $DRY_RUN"
 echo "- python3: $PYTHON_PRESENT"
 echo "- openviking-server: $OPENVIKING_SERVER_PRESENT"
-echo "- ov CLI: $OV_CLI_PRESENT"
+echo "- openviking CLI: ${OPENVIKING_CLI_BIN:-not found}"
 echo "- OPENVIKING_CONFIG_FILE should point to: $CONFIG_PATH"
 echo "- memory root: $MEMORY_ROOT"
 if [[ -f "$UPSTREAM_REGISTRY_FILE" ]]; then
@@ -197,5 +207,5 @@ if dry_run != 'true':
         fh.write('\n')
 PY
 
-echo "- next step: optionally index upstream repos into OpenViking resources, e.g. viking://resources/upstreams/..."
+echo "- next step: ./scripts/index-openviking-resources.sh --dry-run"
 echo "Done."

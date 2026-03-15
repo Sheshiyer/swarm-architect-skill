@@ -9,7 +9,25 @@ Every major planning object should have a memory footprint:
 - the wave,
 - the swarm,
 - the task,
-- and the validation result.
+- the validation result,
+- and any indexed upstream reference material the swarm depends on.
+
+## Bootstrap and ingestion workflow
+Before relying on upstream context in planning or execution, prepare and ingest it explicitly:
+
+```bash
+cp .swarm-bootstrap.example.json .swarm-bootstrap.json
+./scripts/bootstrap-upstreams.sh
+./scripts/bootstrap-openviking.sh
+./scripts/index-openviking-resources.sh --dry-run
+./scripts/index-openviking-resources.sh --wait
+```
+
+After indexing, the default upstream resource roots are:
+- `viking://resources/upstreams/agency-agents`
+- `viking://resources/upstreams/impeccable`
+
+Use these URIs as deterministic retrieval anchors before falling back to broader semantic search.
 
 ## Read / Write lifecycle
 
@@ -19,6 +37,7 @@ Retrieve:
 - prior lessons
 - prior wave summaries
 - architecture and spec overviews
+- indexed upstream resources that shape worker or quality profiles
 
 Write:
 - discovery summary
@@ -31,6 +50,7 @@ Retrieve:
 - current wave memory
 - upstream task memories
 - relevant project resource summaries
+- indexed upstream profile roots
 
 Write:
 - swarm objective
@@ -43,6 +63,7 @@ Retrieve:
 - latest handoff
 - upstream validation notes
 - execution / quality / validation profiles
+- indexed profile or methodology documents referenced by those profiles
 
 Write:
 - task start note
@@ -70,6 +91,7 @@ Reads:
 - planning memory
 - lessons
 - dependency history
+- indexed upstream strategy/profile references
 
 Writes:
 - discovery records
@@ -83,6 +105,7 @@ Reads:
 - task memory
 - quality profile
 - contract summaries
+- indexed frontend quality references
 
 Writes:
 - implementation summary
@@ -96,6 +119,7 @@ Reads:
 - task memory
 - deployment constraints
 - contract summaries
+- indexed implementation references
 
 Writes:
 - integration notes
@@ -109,6 +133,7 @@ Reads:
 - validation profile
 - acceptance criteria
 - defect history
+- indexed validation/checklist references
 
 Writes:
 - regression report
@@ -119,6 +144,7 @@ Writes:
 ## Retrieval discipline
 - Prefer L0/L1 overviews before loading L2 detail.
 - Retrieve by deterministic URI first, semantic search second.
+- Use indexed upstream roots for profile overlays before broad repo-wide search.
 - If retrieval paths become noisy, tighten directory structure before adding more memory.
 
 ## Memory-aware done standard
@@ -126,4 +152,5 @@ Work is not done until:
 1. the deliverable exists,
 2. validation is attached,
 3. the relevant memory record is written,
-4. and downstream retrieval paths are clear.
+4. indexed dependencies are discoverable when they should be,
+5. and downstream retrieval paths are clear.

@@ -71,7 +71,7 @@ OpenViking-ready fields and URI conventions make shared swarm memory explicit an
 | [`schemas/`](./schemas) | Structured task, issue, profile, and memory defaults |
 | [`examples/`](./examples) | Concrete examples for plans, waves, and agent assignments |
 | [`docs/`](./docs) | Integration guidance, memory mapping, and bootstrap documentation |
-| [`scripts/`](./scripts) | Install helper and first-run bootstrap helpers |
+| [`scripts/`](./scripts) | Install helper, bootstrap helpers, and OpenViking indexing helper |
 | [`.swarm-bootstrap.example.json`](./.swarm-bootstrap.example.json) | Example local bootstrap config |
 | [`icon.svg`](./icon.svg) | UI icon for the skill package |
 
@@ -146,6 +146,8 @@ If you want specialist overlays and memory-aware structure:
 cp .swarm-bootstrap.example.json .swarm-bootstrap.json
 ./scripts/bootstrap-upstreams.sh
 ./scripts/bootstrap-openviking.sh
+./scripts/index-openviking-resources.sh --dry-run
+./scripts/index-openviking-resources.sh --wait
 ```
 
 This will:
@@ -153,6 +155,8 @@ This will:
 - clone `impeccable` once
 - generate `.swarm-upstream-resources.json`
 - generate `.swarm-openviking-paths.json`
+- preview the exact OpenViking ingestion commands
+- index the discovered upstream repos into `viking://resources/upstreams/...`
 
 ### 6. Pair with other systems as needed
 - **agency-agents** → specialist execution overlays
@@ -182,12 +186,45 @@ Swarm Architect includes a bootstrap layer for local setup.
 It can:
 - clone `agency-agents` once into `.external/agency-agents`
 - clone `impeccable` once into `.external/impeccable`
-- generate `.swarm-upstream-resources.json` so those repos become OpenViking-visible
+- generate `.swarm-upstream-resources.json` so those repos become OpenViking-ingestable
 - prepare OpenViking config guidance
 - generate deterministic memory path conventions for the current repo, including upstream resource roots when available
+- ingest the discovered upstream repos into OpenViking with a dedicated follow-up script
+
+Recommended flow:
+
+```bash
+cp .swarm-bootstrap.example.json .swarm-bootstrap.json
+./scripts/bootstrap-upstreams.sh
+./scripts/bootstrap-openviking.sh
+./scripts/index-openviking-resources.sh --dry-run
+./scripts/index-openviking-resources.sh --wait
+```
 
 See:
 - [`docs/bootstrap.md`](./docs/bootstrap.md)
+
+## OpenViking indexing
+
+A dedicated helper is included at:
+- [`scripts/index-openviking-resources.sh`](./scripts/index-openviking-resources.sh)
+
+It consumes the generated `.swarm-upstream-resources.json` file and runs the real OpenViking CLI ingestion step using the documented `openviking add-resource ...` flow.
+
+It supports:
+- `--dry-run`
+- `--wait`
+- `--replace-existing`
+- `--only <name>`
+- `--cli <command>`
+
+Examples:
+
+```bash
+./scripts/index-openviking-resources.sh --dry-run
+./scripts/index-openviking-resources.sh --only agency-agents --wait
+./scripts/index-openviking-resources.sh --replace-existing --wait
+```
 
 ## Concrete operating model
 
