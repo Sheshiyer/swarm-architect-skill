@@ -42,3 +42,13 @@ workflows:
       - playbooks/openviking-memory-ops.md
       - docs/openviking-memory-mapping.md
       - runbooks/memory-capture.md
+  worker-bootstrap:
+    useWhen:
+      - a fresh Codex, Copilot, Gemini, or similar CLI session must be started from Swarm Architect output
+      - explicit handoff packets are needed instead of relying on chat continuity
+    primaryAssets:
+      - runbooks/launch-worker-session.md
+      - templates/shared-contract-packet-template.md
+      - templates/cli-session-bootstrap-template.md
+      - templates/validation-brief-template.md
+      - machine-readable/session-bootstrap-schema.yaml

@@ -1,0 +1,40 @@
+sessionBootstrap:
+  sharedPacket:
+    required:
+      - projectBrief
+      - contractsPath
+      - ownershipModel
+      - validationGatePath
+  workerPacket:
+    required:
+      - runtime
+      - role
+      - taskId
+      - objective
+      - readFirst
+      - ownedSurfaces
+      - forbiddenZones
+      - deliverables
+      - handbackFormat
+    optional:
+      - githubIssue
+      - branch
+      - worktree
+      - memoryScope
+      - memoryUri
+      - memoryInputs
+      - memoryOutputs
+  launchManifest:
+    required:
+      - phase
+      - wave
+      - swarm
+      - sharedContracts
+      - agents
+    agentFields:
+      - agent
+      - role
+      - bootstrap
+      - issue
+      - branch
+      - worktree

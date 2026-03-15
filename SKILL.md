@@ -1,6 +1,6 @@
 ---
 name: "Swarm Architect"
-description: "Orchestrate multi-agent delivery with phase→wave→swarm planning, lightweight runbooks, GitHub synchronization, and OpenViking-ready memory capture."
+description: "Orchestrate multi-agent delivery with phase→wave→swarm planning, worker bootstrap packets for fresh CLI sessions, GitHub synchronization, and OpenViking-ready memory capture."
 globs:
   - "DesignSpec.md"
   - "ProjectArchitecture.md"
@@ -52,6 +52,9 @@ When this skill is invoked, load these files before producing the plan.
 7. `templates/github-issue-template.md`
 8. `templates/agent-handoff-template.md`
 9. `templates/openviking-memory-capture-template.md` when memory records need to be written explicitly
+10. `templates/shared-contract-packet-template.md` when fresh worker CLI sessions must share frozen contracts
+11. `templates/cli-session-bootstrap-template.md` when launching a fresh Codex, Copilot, Gemini, or similar worker session
+12. `templates/validation-brief-template.md` when launching a dedicated validation session
 
 ### Structured defaults
 10. `schemas/task-schema.json`
@@ -65,16 +68,18 @@ When this skill is invoked, load these files before producing the plan.
 16. `runbooks/wave-close.md` when a wave needs integration closeout and next-wave readiness review
 17. `runbooks/validation-gate.md` when validation requirements need to be explicit before execution
 18. `runbooks/memory-capture.md` when OpenViking-compatible memory records must be shaped
+19. `runbooks/launch-worker-session.md` when a fresh worker CLI session must be launched from a scoped handoff packet
 
 ### Usage references
-19. `examples/sample-plan.md` when the user asks for a sample full plan
-20. `examples/sample-wave.md` when the user asks for a detailed wave example
-21. `examples/sample-agent-assignment.md` when the user asks how agents should be split
-22. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
-23. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
-24. `machine-readable/reference.yaml` when a compact package map is needed
-25. `machine-readable/workflows.yaml` when workflow selection is ambiguous
-26. `machine-readable/profiles.yaml` when role/profile overlays need a compact summary
+20. `examples/sample-plan.md` when the user asks for a sample full plan
+21. `examples/sample-wave.md` when the user asks for a detailed wave example
+22. `examples/sample-agent-assignment.md` when the user asks how agents should be split
+23. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
+24. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
+25. `machine-readable/reference.yaml` when a compact package map is needed
+26. `machine-readable/workflows.yaml` when workflow selection is ambiguous
+27. `machine-readable/profiles.yaml` when role/profile overlays need a compact summary
+28. `machine-readable/session-bootstrap-schema.yaml` when generating launch manifests or worker startup packets
 
 ## Adjacent Skills to Leverage
 
@@ -92,6 +97,7 @@ Before planning, choose the closest operating path:
 - use `runbooks/validation-gate.md` when the quality bar or release gate must be made explicit early
 - use `runbooks/wave-close.md` when assessing integration readiness at a wave boundary
 - use `runbooks/memory-capture.md` when OpenViking-compatible records or retrieval paths must be shaped
+- use `runbooks/launch-worker-session.md` when a fresh Codex, Copilot, Gemini, or similar CLI session must be started from a scoped handoff packet
 
 If workflow selection is ambiguous, consult `machine-readable/workflows.yaml` before proceeding.
 
@@ -191,7 +197,8 @@ A Swarm Architect response should present, in order:
 7. Dependency rationale
 8. Verification strategy
 9. GitHub sync and dispatch strategy
-10. Risks and fallback plan
+10. Worker bootstrap packet strategy when fresh external CLI workers will be launched
+11. Risks and fallback plan
 
 ## Default Agent Model
 

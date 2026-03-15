@@ -16,17 +16,22 @@ entrypoints:
     - runbooks/wave-close.md
     - runbooks/validation-gate.md
     - runbooks/memory-capture.md
+    - runbooks/launch-worker-session.md
   templates:
     - templates/discovery-template.md
     - templates/phase-wave-swarm-template.md
     - templates/github-issue-template.md
     - templates/agent-handoff-template.md
     - templates/openviking-memory-capture-template.md
+    - templates/cli-session-bootstrap-template.md
+    - templates/shared-contract-packet-template.md
+    - templates/validation-brief-template.md
   schemas:
     - schemas/task-schema.json
     - schemas/issue-mapping-schema.json
     - schemas/agent-role-matrix.yaml
     - schemas/runtime-role-catalog.yaml
+    - machine-readable/session-bootstrap-schema.yaml
   docs:
     - docs/bootstrap.md
     - docs/openviking-memory-mapping.md

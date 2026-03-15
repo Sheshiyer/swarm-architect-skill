@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Multi-agent planning and orchestration skill for <strong>Claude + Codex + Copilot + Gemini</strong>, with phase → wave → swarm execution, lightweight runbooks, GitHub-native tracking, and OpenViking-ready memory design.
+  Multi-agent planning and orchestration skill for <strong>Claude + Codex + Copilot + Gemini</strong>, with phase → wave → swarm execution, fresh worker bootstrap packets, lightweight runbooks, GitHub-native tracking, and OpenViking-ready memory design.
 </p>
 
 <!-- readme-gen:start:badges -->
@@ -66,11 +66,11 @@ OpenViking-ready fields and URI conventions make shared swarm memory explicit an
 | Path | Purpose |
 |---|---|
 | [`SKILL.md`](./SKILL.md) | Main skill entrypoint and operating contract |
-| [`templates/`](./templates) | Reusable templates for discovery, planning, issue sync, handoffs, and memory capture |
+| [`templates/`](./templates) | Reusable templates for discovery, planning, issue sync, handoffs, memory capture, and worker session bootstrap |
 | [`playbooks/`](./playbooks) | Multi-agent rules, GitHub sync, worktree strategy, verification, memory ops |
-| [`runbooks/`](./runbooks) | Lightweight named operating procedures for planning, GitHub sync, validation, wave close, and memory capture |
+| [`runbooks/`](./runbooks) | Lightweight named operating procedures for planning, GitHub sync, validation, wave close, memory capture, and fresh worker launches |
 | [`schemas/`](./schemas) | Structured task, issue, profile, role, and memory defaults |
-| [`machine-readable/`](./machine-readable) | Compact indexes for workflows, profiles, and package navigation |
+| [`machine-readable/`](./machine-readable) | Compact indexes for workflows, profiles, package navigation, and worker session manifests |
 | [`examples/`](./examples) | Concrete examples for plans, waves, and agent assignments |
 | [`docs/`](./docs) | Integration guidance, memory mapping, and bootstrap documentation |
 | [`scripts/`](./scripts) | Install helper, bootstrap helpers, and OpenViking indexing helper |
@@ -242,6 +242,24 @@ The package now includes a lightweight adaptation layer inspired by larger guide
 - a portable role catalog in [`schemas/runtime-role-catalog.yaml`](./schemas/runtime-role-catalog.yaml)
 
 This keeps Swarm Architect lean while making workflow choice, role assignment, and future retrieval easier.
+
+## Worker bootstrap layer
+
+Swarm Architect now includes a dedicated worker bootstrap layer for **fresh CLI sessions** started after planning.
+
+Use it when Claude finishes orchestration and you need to launch a clean:
+- Codex implementation session
+- Copilot backend/infra session
+- Gemini validation session
+
+Key assets:
+- [`runbooks/launch-worker-session.md`](./runbooks/launch-worker-session.md)
+- [`templates/shared-contract-packet-template.md`](./templates/shared-contract-packet-template.md)
+- [`templates/cli-session-bootstrap-template.md`](./templates/cli-session-bootstrap-template.md)
+- [`templates/validation-brief-template.md`](./templates/validation-brief-template.md)
+- [`machine-readable/session-bootstrap-schema.yaml`](./machine-readable/session-bootstrap-schema.yaml)
+
+This layer makes worker startup deterministic by generating scoped handoff packets instead of relying on chat continuity.
 
 ## Concrete operating model
 
