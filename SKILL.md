@@ -1,6 +1,6 @@
 ---
 name: "Swarm Architect"
-description: "Design execution-ready multi-agent delivery plans with phase→wave→swarm decomposition, contract-first parallelism, and GitHub synchronization."
+description: "Orchestrate multi-agent delivery with phase→wave→swarm planning, lightweight runbooks, GitHub synchronization, and OpenViking-ready memory capture."
 globs:
   - "DesignSpec.md"
   - "ProjectArchitecture.md"

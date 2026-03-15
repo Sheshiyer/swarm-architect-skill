@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Multi-agent planning and orchestration for <strong>Claude + Codex + Copilot + Gemini</strong>, with phase → wave → swarm execution, GitHub-native tracking, and OpenViking-ready memory design.
+  Multi-agent planning and orchestration skill for <strong>Claude + Codex + Copilot + Gemini</strong>, with phase → wave → swarm execution, lightweight runbooks, GitHub-native tracking, and OpenViking-ready memory design.
 </p>
 
 <!-- readme-gen:start:badges -->
