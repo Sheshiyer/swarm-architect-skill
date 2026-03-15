@@ -44,6 +44,24 @@
       "type": "string",
       "description": "Validation overlay, e.g. agency/reality-checker"
     },
+    "memory_scope": {
+      "type": "string",
+      "enum": ["project", "planning", "phase", "wave", "swarm", "task", "validation", "lesson"]
+    },
+    "memory_uri": {
+      "type": "string",
+      "description": "Primary OpenViking URI for this task or planning object"
+    },
+    "memory_inputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "OpenViking URIs or other memory references that should be loaded before work starts"
+    },
+    "memory_outputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Named records or URIs that should be written after completion"
+    },
     "phase": {
       "type": "string"
     },

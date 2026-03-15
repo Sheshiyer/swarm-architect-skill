@@ -32,6 +32,16 @@
     "execution_profile": { "type": "string" },
     "quality_profile": { "type": "string" },
     "validation_profile": { "type": "string" },
+    "memory_scope": { "type": "string" },
+    "memory_uri": { "type": "string" },
+    "memory_inputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "memory_outputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "owner_role": { "type": "string" },
     "labels": {
       "type": "array",

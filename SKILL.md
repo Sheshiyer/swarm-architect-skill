@@ -44,22 +44,25 @@ When this skill is invoked, load these files before producing the plan.
 3. `playbooks/verification-gates.md`
 4. `playbooks/github-sync.md`
 5. `playbooks/claude-codex-copilot-gemini-operating-model.md` when the active stack matches that workflow
+6. `playbooks/openviking-memory-ops.md` when memory-aware swarm execution is requested
 
 ### Output scaffolds
 5. `templates/discovery-template.md`
 6. `templates/phase-wave-swarm-template.md`
 7. `templates/github-issue-template.md`
 8. `templates/agent-handoff-template.md`
+9. `templates/openviking-memory-capture-template.md` when memory records need to be written explicitly
 
 ### Structured defaults
-9. `schemas/task-schema.json`
-10. `schemas/issue-mapping-schema.json`
-11. `schemas/agent-role-matrix.yaml`
+10. `schemas/task-schema.json`
+11. `schemas/issue-mapping-schema.json`
+12. `schemas/agent-role-matrix.yaml`
 
 ### Usage references
-12. `examples/sample-plan.md` when the user asks for a sample full plan
-13. `examples/sample-wave.md` when the user asks for a detailed wave example
-14. `examples/sample-agent-assignment.md` when the user asks how agents should be split
+13. `examples/sample-plan.md` when the user asks for a sample full plan
+14. `examples/sample-wave.md` when the user asks for a detailed wave example
+15. `examples/sample-agent-assignment.md` when the user asks how agents should be split
+16. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
 
 ## Adjacent Skills to Leverage
 

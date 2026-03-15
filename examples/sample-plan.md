@@ -52,6 +52,17 @@ This is a compact example of how Swarm Architect should respond. Real plans shou
   "execution_profile": "agency/engineering-backend-architect",
   "quality_profile": "impeccable/harden",
   "validation_profile": "agency/testing-api-tester",
+  "memory_scope": "task",
+  "memory_uri": "viking://agent/memories/swarms/checkout/tasks/T-001",
+  "memory_inputs": [
+    "viking://resources/projects/checkout/architecture/.overview",
+    "viking://agent/memories/swarms/checkout/phases/P1/W1/swarm-api/.overview"
+  ],
+  "memory_outputs": [
+    "completion-summary",
+    "validation-evidence",
+    "handoff-note"
+  ],
   "phase": "P1",
   "wave": "W1",
   "swarm": "api-contracts",

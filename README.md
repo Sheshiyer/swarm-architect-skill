@@ -142,17 +142,19 @@ graph TD
 📦 swarm-architect-skill
 ├── 📄 SKILL.md                         # Main skill entrypoint
 ├── 🎨 icon.svg                         # UI icon
-├── 📂 templates/                       # Discovery, planning, issue, and handoff scaffolds
+├── 📂 templates/                       # Discovery, planning, issue, handoff, and memory capture scaffolds
 │   ├── discovery-template.md
 │   ├── phase-wave-swarm-template.md
 │   ├── github-issue-template.md
-│   └── agent-handoff-template.md
+│   ├── agent-handoff-template.md
+│   └── openviking-memory-capture-template.md
 ├── 📂 playbooks/                       # Operating manuals and guardrails
 │   ├── multi-agent-boundaries.md
 │   ├── worktree-strategy.md
 │   ├── verification-gates.md
 │   ├── github-sync.md
-│   └── claude-codex-copilot-gemini-operating-model.md
+│   ├── claude-codex-copilot-gemini-operating-model.md
+│   └── openviking-memory-ops.md
 ├── 📂 schemas/                         # Structured defaults for tasks and issue mapping
 │   ├── task-schema.json
 │   ├── issue-mapping-schema.json
@@ -161,11 +163,22 @@ graph TD
 │   ├── sample-plan.md
 │   ├── sample-wave.md
 │   └── sample-agent-assignment.md
-└── 📂 docs/                            # External integration mapping guides
+└── 📂 docs/                            # External integration and memory mapping guides
     ├── agency-agents-mapping.md
-    └── impeccable-mapping.md
+    ├── impeccable-mapping.md
+    └── openviking-memory-mapping.md
 ```
 <!-- readme-gen:end:tree -->
+
+## Memory-aware swarm model
+
+Swarm Architect can also pair with **OpenViking** to make the whole swarm memory-aware.
+
+In that setup:
+- **Swarm Architect** stays the orchestration plane
+- **OpenViking** becomes the shared context and memory plane
+
+That means tasks, swarms, waves, and validation lanes can read and write durable memory through deterministic `viking://` paths instead of relying only on prompt-local context.
 
 ## Pair it with other systems
 
@@ -187,6 +200,15 @@ Start here:
 - [`docs/impeccable-mapping.md`](./docs/impeccable-mapping.md)
 - Upstream repo: [pbakaus/impeccable](https://github.com/pbakaus/impeccable)
 
+### 🧠 Pair with OpenViking
+Use **OpenViking** as your swarm memory backend.
+
+Swarm Architect remains the control plane; OpenViking stores shared project memory, wave memory, swarm-local memory, task handoffs, and validation records through deterministic `viking://` URIs.
+
+Start here:
+- [`docs/openviking-memory-mapping.md`](./docs/openviking-memory-mapping.md)
+- Upstream repo: [volcengine/OpenViking](https://github.com/volcengine/OpenViking)
+
 ## Composable task model
 
 Swarm Architect now supports a layered task model:
@@ -194,6 +216,10 @@ Swarm Architect now supports a layered task model:
 - **`execution_profile`** → the specialist worker overlay, such as `agency/engineering-frontend-developer`
 - **`quality_profile`** → the quality methodology overlay, such as `impeccable/polish`
 - **`validation_profile`** → the validation specialist overlay, such as `agency/testing-reality-checker`
+- **`memory_scope`** → where the record lives in the memory hierarchy, such as `task` or `wave`
+- **`memory_uri`** → the primary OpenViking location for that work item
+- **`memory_inputs`** → the memory records that should be loaded before execution starts
+- **`memory_outputs`** → the records that should be written after completion
 
 Example:
 
@@ -202,7 +228,17 @@ Example:
   "owner_agent": "codex",
   "execution_profile": "agency/engineering-frontend-developer",
   "quality_profile": "impeccable/polish",
-  "validation_profile": "agency/testing-reality-checker"
+  "validation_profile": "agency/testing-reality-checker",
+  "memory_scope": "task",
+  "memory_uri": "viking://agent/memories/swarms/checkout/tasks/T-042",
+  "memory_inputs": [
+    "viking://resources/projects/checkout/architecture/.overview"
+  ],
+  "memory_outputs": [
+    "completion-summary",
+    "validation-evidence",
+    "handoff-note"
+  ]
 }
 ```
 

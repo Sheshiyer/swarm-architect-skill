@@ -18,6 +18,8 @@ Use this template when turning a plan task into a GitHub issue.
 - **Execution profile:** `{{execution_profile}}`
 - **Quality profile:** `{{quality_profile}}`
 - **Validation profile:** `{{validation_profile}}`
+- **Memory scope:** `{{memory_scope}}`
+- **Memory URI:** `{{memory_uri}}`
 - **Owner role:** `{{owner_role}}`
 - **Estimated hours:** `{{est_hours}}`
 
@@ -38,6 +40,8 @@ Use this template when turning a plan task into a GitHub issue.
 ### Execution Envelope
 - **Branch:** `{{branch}}`
 - **Worktree:** `{{worktree}}`
+- **Memory inputs:** {{memory_inputs}}
+- **Memory outputs:** {{memory_outputs}}
 - **Lock-zone files:**
 - **Allowed edit surface:**
 - **Explicitly out of scope:**
