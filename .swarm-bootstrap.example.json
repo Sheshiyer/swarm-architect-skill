@@ -1,0 +1,22 @@
+{
+  "openviking": {
+    "mode": "local",
+    "configPath": "~/.openviking/ov.conf",
+    "memoryRoot": "viking://agent/memories/swarms/${repo}",
+    "pathsFile": ".swarm-openviking-paths.json"
+  },
+  "upstreams": {
+    "agencyAgents": {
+      "enabled": true,
+      "repo": "https://github.com/msitarzewski/agency-agents.git",
+      "path": ".external/agency-agents",
+      "branch": "main"
+    },
+    "impeccable": {
+      "enabled": true,
+      "repo": "https://github.com/pbakaus/impeccable.git",
+      "path": ".external/impeccable",
+      "branch": "main"
+    }
+  }
+}

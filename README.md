@@ -66,7 +66,9 @@ Tasks map cleanly into issues, branches, worktrees, handoffs, and validation evi
 | [`playbooks/`](./playbooks) | Multi-agent operating rules, GitHub sync, worktree strategy, verification gates |
 | [`schemas/`](./schemas) | Structured task, issue, and role-mapping defaults |
 | [`examples/`](./examples) | Concrete examples for plans, waves, and agent assignments |
-| [`docs/`](./docs) | Integration guidance for pairing Swarm Architect with other repos and methodologies |
+| [`docs/`](./docs) | Integration guidance, memory mapping, and bootstrap documentation |
+| [`scripts/`](./scripts) | First-run bootstrap helpers for upstream clones and OpenViking prep |
+| [`.swarm-bootstrap.example.json`](./.swarm-bootstrap.example.json) | Example local bootstrap config |
 | [`icon.svg`](./icon.svg) | UI icon for the skill package |
 
 ## Quick start
@@ -88,6 +90,29 @@ If you are not using Craft Agent directly, you can still reuse the package as:
 - a swarm decomposition reference,
 - a GitHub issue/worktree operating manual,
 - and a concrete Claude/Codex/Copilot/Gemini coordination model.
+
+### First-run bootstrap
+
+Swarm Architect now includes a **bootstrap layer** for local setup.
+
+It can:
+- clone `agency-agents` once into `.external/agency-agents`
+- clone `impeccable` once into `.external/impeccable`
+- prepare OpenViking config guidance
+- generate deterministic memory path conventions for the current repo
+
+Recommended first run:
+
+```bash
+cp .swarm-bootstrap.example.json .swarm-bootstrap.json
+./scripts/bootstrap-upstreams.sh
+./scripts/bootstrap-openviking.sh
+```
+
+Bootstrap is **idempotent**: upstreams are cloned once, not re-cloned every run.
+
+See:
+- [`docs/bootstrap.md`](./docs/bootstrap.md)
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=2,3&height=2" width="100%" />
 
@@ -141,6 +166,7 @@ graph TD
 ```text
 📦 swarm-architect-skill
 ├── 📄 SKILL.md                         # Main skill entrypoint
+├── ⚙️ .swarm-bootstrap.example.json    # Example local bootstrap config
 ├── 🎨 icon.svg                         # UI icon
 ├── 📂 templates/                       # Discovery, planning, issue, handoff, and memory capture scaffolds
 │   ├── discovery-template.md
@@ -163,10 +189,14 @@ graph TD
 │   ├── sample-plan.md
 │   ├── sample-wave.md
 │   └── sample-agent-assignment.md
-└── 📂 docs/                            # External integration and memory mapping guides
+├── 📂 scripts/                         # First-run bootstrap scripts
+│   ├── bootstrap-upstreams.sh
+│   └── bootstrap-openviking.sh
+└── 📂 docs/                            # External integration, memory mapping, and bootstrap guides
     ├── agency-agents-mapping.md
     ├── impeccable-mapping.md
-    └── openviking-memory-mapping.md
+    ├── openviking-memory-mapping.md
+    └── bootstrap.md
 ```
 <!-- readme-gen:end:tree -->
 

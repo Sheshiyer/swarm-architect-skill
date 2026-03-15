@@ -63,6 +63,7 @@ When this skill is invoked, load these files before producing the plan.
 14. `examples/sample-wave.md` when the user asks for a detailed wave example
 15. `examples/sample-agent-assignment.md` when the user asks how agents should be split
 16. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
+17. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
 
 ## Adjacent Skills to Leverage
 
