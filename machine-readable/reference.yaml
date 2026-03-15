@@ -1,0 +1,38 @@
+skill:
+  name: Swarm Architect
+  purpose: Multi-agent orchestration for phase-to-wave-to-swarm planning, GitHub sync, and memory-aware delivery.
+entrypoints:
+  skill: SKILL.md
+  playbooks:
+    - playbooks/multi-agent-boundaries.md
+    - playbooks/worktree-strategy.md
+    - playbooks/verification-gates.md
+    - playbooks/github-sync.md
+    - playbooks/claude-codex-copilot-gemini-operating-model.md
+    - playbooks/openviking-memory-ops.md
+  runbooks:
+    - runbooks/spec-to-plan.md
+    - runbooks/plan-to-github.md
+    - runbooks/wave-close.md
+    - runbooks/validation-gate.md
+    - runbooks/memory-capture.md
+  templates:
+    - templates/discovery-template.md
+    - templates/phase-wave-swarm-template.md
+    - templates/github-issue-template.md
+    - templates/agent-handoff-template.md
+    - templates/openviking-memory-capture-template.md
+  schemas:
+    - schemas/task-schema.json
+    - schemas/issue-mapping-schema.json
+    - schemas/agent-role-matrix.yaml
+    - schemas/runtime-role-catalog.yaml
+  docs:
+    - docs/bootstrap.md
+    - docs/openviking-memory-mapping.md
+    - docs/agency-agents-mapping.md
+    - docs/impeccable-mapping.md
+  examples:
+    - examples/sample-plan.md
+    - examples/sample-wave.md
+    - examples/sample-agent-assignment.md

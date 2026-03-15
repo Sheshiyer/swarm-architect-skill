@@ -1,0 +1,44 @@
+workflows:
+  discovery:
+    useWhen:
+      - planning scope is unclear
+      - constraints must be surfaced before decomposition
+    primaryAssets:
+      - templates/discovery-template.md
+      - runbooks/spec-to-plan.md
+  plan-driven:
+    useWhen:
+      - user needs execution-ready planning
+      - multiple waves or swarms are expected
+    primaryAssets:
+      - templates/phase-wave-swarm-template.md
+      - schemas/task-schema.json
+      - runbooks/spec-to-plan.md
+  github-sync:
+    useWhen:
+      - plan must become tracked execution work in GitHub
+    primaryAssets:
+      - playbooks/github-sync.md
+      - templates/github-issue-template.md
+      - runbooks/plan-to-github.md
+  validation-first:
+    useWhen:
+      - delivery quality bar must be explicit
+      - release or hardening work is in scope
+    primaryAssets:
+      - playbooks/verification-gates.md
+      - runbooks/validation-gate.md
+  wave-close:
+    useWhen:
+      - a wave is nearing completion
+      - integration or release readiness must be assessed
+    primaryAssets:
+      - playbooks/verification-gates.md
+      - runbooks/wave-close.md
+  memory-aware:
+    useWhen:
+      - OpenViking retrieval or durable execution memory is requested
+    primaryAssets:
+      - playbooks/openviking-memory-ops.md
+      - docs/openviking-memory-mapping.md
+      - runbooks/memory-capture.md

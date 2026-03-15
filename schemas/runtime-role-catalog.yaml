@@ -1,0 +1,42 @@
+roles:
+  planner-orchestrator:
+    purpose: Shape discovery, planning, decomposition, dependency logic, and orchestration decisions.
+    defaultAgents: [claude]
+    responsibilities:
+      - run discovery
+      - choose operating workflow
+      - define phases, waves, swarms
+      - freeze contracts before parallel work
+      - drive GitHub sync strategy
+  frontend-executor:
+    purpose: Own UI, app integration, and user-facing implementation surfaces.
+    defaultAgents: [codex]
+    responsibilities:
+      - implement UI/app work
+      - respect shared contracts
+      - report integration risks
+      - produce handoff notes
+  backend-infra-executor:
+    purpose: Own backend, cloud, CI/CD, infra, and integration plumbing.
+    defaultAgents: [copilot]
+    responsibilities:
+      - implement backend and infrastructure changes
+      - manage deployment and config impacts
+      - coordinate lock-zone changes carefully
+      - report integration and rollout risks
+  validation-reviewer:
+    purpose: Validate behavior, regressions, edge cases, and release readiness.
+    defaultAgents: [gemini]
+    responsibilities:
+      - design and run validation tasks
+      - challenge assumptions and regressions
+      - attach evidence to completion claims
+      - surface residual risks
+  release-integrator:
+    purpose: Close waves, merge safely, and prepare release or rollout recommendations.
+    defaultAgents: [claude, copilot]
+    responsibilities:
+      - coordinate wave-close reviews
+      - confirm integration boundaries
+      - ensure verification evidence exists
+      - recommend release or fallback action

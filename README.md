@@ -68,7 +68,9 @@ OpenViking-ready fields and URI conventions make shared swarm memory explicit an
 | [`SKILL.md`](./SKILL.md) | Main skill entrypoint and operating contract |
 | [`templates/`](./templates) | Reusable templates for discovery, planning, issue sync, handoffs, and memory capture |
 | [`playbooks/`](./playbooks) | Multi-agent rules, GitHub sync, worktree strategy, verification, memory ops |
-| [`schemas/`](./schemas) | Structured task, issue, profile, and memory defaults |
+| [`runbooks/`](./runbooks) | Lightweight named operating procedures for planning, GitHub sync, validation, wave close, and memory capture |
+| [`schemas/`](./schemas) | Structured task, issue, profile, role, and memory defaults |
+| [`machine-readable/`](./machine-readable) | Compact indexes for workflows, profiles, and package navigation |
 | [`examples/`](./examples) | Concrete examples for plans, waves, and agent assignments |
 | [`docs/`](./docs) | Integration guidance, memory mapping, and bootstrap documentation |
 | [`scripts/`](./scripts) | Install helper, bootstrap helpers, and OpenViking indexing helper |
@@ -129,6 +131,12 @@ Swarm Architect should then produce:
 - task list
 - verification strategy
 - GitHub sync strategy
+
+Use the lightweight operating layer when helpful:
+- [`runbooks/spec-to-plan.md`](./runbooks/spec-to-plan.md)
+- [`runbooks/plan-to-github.md`](./runbooks/plan-to-github.md)
+- [`runbooks/validation-gate.md`](./runbooks/validation-gate.md)
+- [`machine-readable/workflows.yaml`](./machine-readable/workflows.yaml)
 
 ### 4. Assign runtime owners and overlays
 Each task can define:
@@ -225,6 +233,15 @@ Examples:
 ./scripts/index-openviking-resources.sh --only agency-agents --wait
 ./scripts/index-openviking-resources.sh --replace-existing --wait
 ```
+
+## Lightweight operating layer
+
+The package now includes a lightweight adaptation layer inspired by larger guide-style systems, without becoming Claude-only:
+- named runbooks in [`runbooks/`](./runbooks)
+- compact workflow/profile indexes in [`machine-readable/`](./machine-readable)
+- a portable role catalog in [`schemas/runtime-role-catalog.yaml`](./schemas/runtime-role-catalog.yaml)
+
+This keeps Swarm Architect lean while making workflow choice, role assignment, and future retrieval easier.
 
 ## Concrete operating model
 

@@ -1,0 +1,21 @@
+profiles:
+  runtimeRoles:
+    catalog: schemas/runtime-role-catalog.yaml
+    matrix: schemas/agent-role-matrix.yaml
+  defaultStack:
+    planner-orchestrator: claude
+    frontend-executor: codex
+    backend-infra-executor: copilot
+    validation-reviewer: gemini
+  overlays:
+    executionProfile:
+      description: Specialist execution overlay, often sourced from agency-agents.
+    qualityProfile:
+      description: Quality methodology overlay, often sourced from impeccable.
+    validationProfile:
+      description: Validation overlay used to challenge or verify implementation outcomes.
+  memoryFields:
+    - memory_scope
+    - memory_uri
+    - memory_inputs
+    - memory_outputs

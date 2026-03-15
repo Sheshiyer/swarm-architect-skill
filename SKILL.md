@@ -57,13 +57,24 @@ When this skill is invoked, load these files before producing the plan.
 10. `schemas/task-schema.json`
 11. `schemas/issue-mapping-schema.json`
 12. `schemas/agent-role-matrix.yaml`
+13. `schemas/runtime-role-catalog.yaml` when runtime responsibilities or owner role clarity are needed
+
+### Lightweight runbooks
+14. `runbooks/spec-to-plan.md` when starting from a feature brief, spec, or architecture request
+15. `runbooks/plan-to-github.md` when the plan must become GitHub-tracked execution work
+16. `runbooks/wave-close.md` when a wave needs integration closeout and next-wave readiness review
+17. `runbooks/validation-gate.md` when validation requirements need to be explicit before execution
+18. `runbooks/memory-capture.md` when OpenViking-compatible memory records must be shaped
 
 ### Usage references
-13. `examples/sample-plan.md` when the user asks for a sample full plan
-14. `examples/sample-wave.md` when the user asks for a detailed wave example
-15. `examples/sample-agent-assignment.md` when the user asks how agents should be split
-16. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
-17. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
+19. `examples/sample-plan.md` when the user asks for a sample full plan
+20. `examples/sample-wave.md` when the user asks for a detailed wave example
+21. `examples/sample-agent-assignment.md` when the user asks how agents should be split
+22. `docs/openviking-memory-mapping.md` when memory-aware swarm execution or retrieval design is in scope
+23. `docs/bootstrap.md` when first-run environment setup, upstream cloning, or OpenViking preparation is requested
+24. `machine-readable/reference.yaml` when a compact package map is needed
+25. `machine-readable/workflows.yaml` when workflow selection is ambiguous
+26. `machine-readable/profiles.yaml` when role/profile overlays need a compact summary
 
 ## Adjacent Skills to Leverage
 
@@ -74,6 +85,15 @@ When available in the active runtime, use these as companion protocols:
 - `gemini` → test design, regression analysis, and adversarial validation
 
 ## Workflow
+
+Before planning, choose the closest operating path:
+- use `runbooks/spec-to-plan.md` for normal planning from specs or architecture briefs
+- use `runbooks/plan-to-github.md` when GitHub execution tracking is a first-class output
+- use `runbooks/validation-gate.md` when the quality bar or release gate must be made explicit early
+- use `runbooks/wave-close.md` when assessing integration readiness at a wave boundary
+- use `runbooks/memory-capture.md` when OpenViking-compatible records or retrieval paths must be shaped
+
+If workflow selection is ambiguous, consult `machine-readable/workflows.yaml` before proceeding.
 
 ### 1. Discovery is mandatory
 Run a short discovery pass unless the user already supplied the answers.
@@ -187,7 +207,7 @@ Example mapping when available:
 - Copilot can fill the cloud / backend role
 - Gemini can fill the validation role
 
-Refine ownership using `schemas/agent-role-matrix.yaml`.
+Refine ownership using `schemas/agent-role-matrix.yaml` and `schemas/runtime-role-catalog.yaml`.
 
 ## Definition of Done
 
