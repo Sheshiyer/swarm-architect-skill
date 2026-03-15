@@ -17,6 +17,7 @@
 </p>
 
 <p align="center">
+  <img alt="Release" src="https://img.shields.io/github/v/release/Sheshiyer/swarm-architect-skill?style=flat-square" />
   <img alt="Stars" src="https://img.shields.io/github/stars/Sheshiyer/swarm-architect-skill?style=flat-square&logo=github" />
   <img alt="Forks" src="https://img.shields.io/github/forks/Sheshiyer/swarm-architect-skill?style=flat-square" />
   <img alt="Issues" src="https://img.shields.io/github/issues/Sheshiyer/swarm-architect-skill?style=flat-square" />
@@ -24,7 +25,7 @@
 </p>
 <!-- readme-gen:end:badges -->
 
-Most multi-agent software efforts fail in the seams: unclear ownership, overlapping edits, drifting contracts, and weak handoffs. **Swarm Architect** gives teams a contract-first orchestration layer that turns vague work into explicit phases, waves, swarms, GitHub issues, and validation gates — so worker agents can execute without breaking each other.
+Most multi-agent software efforts fail in the seams: unclear ownership, overlapping edits, drifting contracts, weak handoffs, and fresh worker sessions that start with too little context. **Swarm Architect** gives teams a contract-first orchestration layer that turns vague work into explicit phases, waves, swarms, GitHub issues, worker bootstrap packets, and validation gates — so Codex, Copilot, and Gemini can start from scoped handoff artifacts instead of guesswork.
 
 ---
 
