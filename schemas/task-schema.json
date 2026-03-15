@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Swarm Architect Task",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "area",
+    "owner_role",
+    "est_hours",
+    "dependencies",
+    "deliverable",
+    "acceptance",
+    "validation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable task identifier, e.g. T-001"
+    },
+    "title": {
+      "type": "string"
+    },
+    "area": {
+      "type": "string",
+      "enum": ["frontend", "backend", "data", "infra", "qa", "product"]
+    },
+    "owner_role": {
+      "type": "string"
+    },
+    "owner_agent": {
+      "type": "string",
+      "description": "Primary coding or orchestration agent"
+    },
+    "phase": {
+      "type": "string"
+    },
+    "wave": {
+      "type": "string"
+    },
+    "swarm": {
+      "type": "string"
+    },
+    "est_hours": {
+      "type": "number",
+      "minimum": 0
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deliverable": {
+      "type": "string"
+    },
+    "acceptance": {
+      "type": "string"
+    },
+    "validation": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "worktree": {
+      "type": "string"
+    },
+    "lock_zone": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

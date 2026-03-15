@@ -1,0 +1,74 @@
+meta:
+  orchestrator: orchestrator
+  default_parallelism_mode: contract-first
+  merge_policy: wave-boundary
+
+agents:
+  orchestrator:
+    role: orchestrator
+    owns:
+      - planning
+      - sequencing
+      - github-sync
+      - integration-review
+      - dependency-management
+    avoids:
+      - broad overlapping implementation without explicit need
+  ui-agent:
+    role: app-builder
+    example_implementations:
+      - codex
+      - claude
+    owns:
+      - architecture-implementation
+      - frontend
+      - ui-integration
+      - client-workflows
+    avoids:
+      - cloud-infra ownership
+      - exclusive qa signoff
+  cloud-agent:
+    role: cloud-integrator
+    example_implementations:
+      - copilot
+    owns:
+      - backend-integration
+      - infrastructure
+      - deployment
+      - cloud-plumbing
+    avoids:
+      - broad UI ownership
+  validation-agent:
+    role: validation-specialist
+    example_implementations:
+      - gemini
+    owns:
+      - test-design
+      - regression-analysis
+      - adversarial-validation
+      - edge-case-checks
+    avoids:
+      - being primary owner for unrelated production feature surfaces
+
+area_defaults:
+  frontend: ui-agent
+  backend: cloud-agent
+  data: cloud-agent
+  infra: cloud-agent
+  qa: validation-agent
+  product: orchestrator
+  integration-review: orchestrator
+
+lock_zones:
+  - package.json
+  - lockfiles
+  - root-ci-config
+  - global-routing-shell
+  - shared-generated-types
+  - env-contracts
+
+handoff_rules:
+  - one-task-one-owner
+  - one-branch-one-worktree-per-task
+  - reopen-contract-task-if-interface-changes
+  - attach-validation-evidence-before-handoff
