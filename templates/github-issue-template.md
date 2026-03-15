@@ -15,6 +15,9 @@ Use this template when turning a plan task into a GitHub issue.
 - **Swarm:** `{{swarm}}`
 - **Area:** `{{area}}`
 - **Primary owner agent:** `{{owner_agent}}`
+- **Execution profile:** `{{execution_profile}}`
+- **Quality profile:** `{{quality_profile}}`
+- **Validation profile:** `{{validation_profile}}`
 - **Owner role:** `{{owner_role}}`
 - **Estimated hours:** `{{est_hours}}`
 

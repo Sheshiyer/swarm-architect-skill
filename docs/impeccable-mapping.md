@@ -59,9 +59,11 @@ You can attach a methodology overlay to a UI task.
   "id": "T-051",
   "owner_agent": "codex",
   "quality_profile": "impeccable/polish",
-  "validation_profile": "gemini/regression"
+  "validation_profile": "agency/testing-reality-checker"
 }
 ```
+
+Use `quality_profile` for the impeccable-style critique, polish, audit, or hardening overlay.
 
 ## Example Pairing
 

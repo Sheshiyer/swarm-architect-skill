@@ -172,7 +172,7 @@ graph TD
 ### 🎭 Pair with Agency Agents
 Use **agency-agents** as your specialist workforce library.
 
-Swarm Architect remains the orchestration layer; agency-agents provides deeper role-specific execution profiles for UI, backend, infra, QA, and project operations.
+Swarm Architect remains the orchestration layer; agency-agents provides deeper role-specific execution profiles for UI, backend, infra, QA, and project operations through fields like `execution_profile` and `validation_profile`.
 
 Start here:
 - [`docs/agency-agents-mapping.md`](./docs/agency-agents-mapping.md)
@@ -181,11 +181,32 @@ Start here:
 ### ✨ Pair with Impeccable
 Use **impeccable** as your frontend quality layer.
 
-Swarm Architect decides ownership and sequencing; impeccable sharpens UI review with critique, audit, polish, distill, and anti-pattern steering.
+Swarm Architect decides ownership and sequencing; impeccable sharpens UI review with critique, audit, polish, distill, and anti-pattern steering through the `quality_profile` layer.
 
 Start here:
 - [`docs/impeccable-mapping.md`](./docs/impeccable-mapping.md)
 - Upstream repo: [pbakaus/impeccable](https://github.com/pbakaus/impeccable)
+
+## Composable task model
+
+Swarm Architect now supports a layered task model:
+- **`owner_agent`** → the concrete runtime owner, such as `codex`, `copilot`, `gemini`, or `claude`
+- **`execution_profile`** → the specialist worker overlay, such as `agency/engineering-frontend-developer`
+- **`quality_profile`** → the quality methodology overlay, such as `impeccable/polish`
+- **`validation_profile`** → the validation specialist overlay, such as `agency/testing-reality-checker`
+
+Example:
+
+```json
+{
+  "owner_agent": "codex",
+  "execution_profile": "agency/engineering-frontend-developer",
+  "quality_profile": "impeccable/polish",
+  "validation_profile": "agency/testing-reality-checker"
+}
+```
+
+This keeps orchestration stable while allowing you to swap specialist behavior and quality methodology without redesigning the plan.
 
 ## Example use cases
 
@@ -194,6 +215,7 @@ Start here:
 - Turn architecture work into GitHub-native issue graphs with branch/worktree isolation
 - Add specialist worker overlays from `agency-agents`
 - Add stronger frontend critique and polish loops from `impeccable`
+- Compose runtime ownership with execution, quality, and validation overlays per task
 
 ## Examples
 

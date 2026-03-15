@@ -45,7 +45,7 @@ Examples:
 | Docs / packaging | Claude or Gemini | `engineering/engineering-technical-writer` |
 
 ## Suggested Schema Extension
-You can keep runtime ownership concrete while adding a specialist profile overlay.
+You can keep runtime ownership concrete while adding specialist profile overlays.
 
 Example task shape:
 
@@ -54,9 +54,11 @@ Example task shape:
   "id": "T-042",
   "owner_agent": "codex",
   "execution_profile": "agency/engineering-frontend-developer",
-  "review_profile": "agency/design-ux-architect"
+  "validation_profile": "agency/testing-reality-checker"
 }
 ```
+
+Use `execution_profile` for the specialist worker overlay and `validation_profile` for the specialist QA/release gate overlay.
 
 ## Good Use Cases
 

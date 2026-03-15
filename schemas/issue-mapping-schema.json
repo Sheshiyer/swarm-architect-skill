@@ -29,6 +29,9 @@
       "enum": ["frontend", "backend", "data", "infra", "qa", "product"]
     },
     "owner_agent": { "type": "string" },
+    "execution_profile": { "type": "string" },
+    "quality_profile": { "type": "string" },
+    "validation_profile": { "type": "string" },
     "owner_role": { "type": "string" },
     "labels": {
       "type": "array",

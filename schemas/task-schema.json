@@ -32,6 +32,18 @@
       "type": "string",
       "description": "Primary coding or orchestration agent"
     },
+    "execution_profile": {
+      "type": "string",
+      "description": "Specialist execution overlay, e.g. agency/frontend-developer"
+    },
+    "quality_profile": {
+      "type": "string",
+      "description": "Quality methodology overlay, e.g. impeccable/polish"
+    },
+    "validation_profile": {
+      "type": "string",
+      "description": "Validation overlay, e.g. agency/reality-checker"
+    },
     "phase": {
       "type": "string"
     },
