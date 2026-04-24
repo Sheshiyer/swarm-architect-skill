@@ -62,3 +62,13 @@ workflows:
       - .superset/setup.sh
       - .superset/teardown.sh
       - .superset/config.local.example.json
+  copilot-agent-dispatch:
+    useWhen:
+      - one or more tasks are marked copilot_eligible and should be routed to the autonomous GitHub Copilot coding agent
+      - a new target repo must first be bootstrapped with copilot-instructions, setup-steps, dispatch workflow, composite action, and issue template
+    primaryAssets:
+      - playbooks/copilot-coding-agent.md
+      - runbooks/route-to-copilot-agent.md
+      - templates/copilot-agent-bootstrap/
+      - templates/copilot-agent-bootstrap/README.md
+      - schemas/task-schema.json
