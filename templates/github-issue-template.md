@@ -4,8 +4,9 @@ Use this template when turning a plan task into a GitHub issue.
 
 ## Header
 - **Issue title:** `[{{phase}}][{{wave}}][{{swarm}}] {{task_id}} — {{title}}`
-- **Labels:** `phase:{{phase}}`, `wave:{{wave}}`, `swarm:{{swarm}}`, `area:{{area}}`, `agent:{{owner_agent}}`
+- **Labels:** `phase:{{phase}}`, `wave:{{wave}}`, `swarm:{{swarm}}`, `area:{{area}}`, `agent:{{owner_agent}}`{{#if copilot_eligible}}, `agent-ready`{{/if}}
 - **Assignee / owner:** `{{owner_role}}`
+- **Copilot routing:** `{{copilot_eligible}}`{{#if copilot_eligible}} — apply the `agent-ready` label on issue creation. The target repo's `copilot-agent-dispatch.yml` workflow assigns `copilot-swe-agent[bot]`. See `runbooks/route-to-copilot-agent.md`.{{/if}}
 
 ## Body
 ### Context

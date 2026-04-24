@@ -99,6 +99,16 @@
     "lock_zone": {
       "type": "boolean"
     },
+    "copilot_eligible": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, the planner marks this task as safe to route to the GitHub Copilot coding agent (copilot-swe-agent[bot]). Requires a well-scoped deliverable, explicit acceptance criteria, a concrete files-of-interest list, and one-branch/one-PR scope. See playbooks/copilot-coding-agent.md."
+    },
+    "copilot_role": {
+      "type": "string",
+      "enum": ["frontend", "backend", "data", "infra", "qa", "product"],
+      "description": "Optional hint for path-scoped instructions in the target repo. Maps to a .github/instructions/<role>.instructions.md file when one exists."
+    },
     "notes": {
       "type": "string"
     }
