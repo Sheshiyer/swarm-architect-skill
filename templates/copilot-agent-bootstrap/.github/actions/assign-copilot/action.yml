@@ -1,0 +1,78 @@
+# Composite action: assign-copilot
+#
+# Assigns `copilot-swe-agent[bot]` to a given issue using the GitHub GraphQL API.
+# This is the single source of truth for:
+#   - The bot's canonical login (`copilot-swe-agent[bot]` — no other form works).
+#   - The two-step assignment (suggestedActors → replaceActorsForAssignable).
+#
+# Consumers: `.github/workflows/copilot-agent-dispatch.yml` in this repo, and
+# any other workflow that needs to route an issue to Copilot.
+#
+# Fails loudly (exit 1) if the bot is not returned in `suggestedActors`, which
+# means the repo/org does not have Copilot coding agent enabled for this PAT.
+
+name: "Assign issue to Copilot coding agent"
+description: "Resolves the Copilot bot actor ID and assigns it to the given issue node."
+
+inputs:
+  issue-node-id:
+    description: "GraphQL node ID of the issue (github.event.issue.node_id)."
+    required: true
+  owner:
+    description: "Repository owner."
+    required: true
+  repo:
+    description: "Repository name."
+    required: true
+  pat:
+    description: "Personal Access Token with rights to assign. GITHUB_TOKEN will NOT work."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Resolve Copilot bot actor ID
+      id: resolve
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.pat }}
+        OWNER: ${{ inputs.owner }}
+        REPO: ${{ inputs.repo }}
+      run: |
+        set -euo pipefail
+        ID=$(gh api graphql \
+          -f query='query($o:String!,$r:String!){
+            repository(owner:$o,name:$r){
+              suggestedActors(capabilities:[CAN_BE_ASSIGNED], first: 100){
+                nodes { login __typename ... on Bot { id } ... on User { id } }
+              }
+            }
+          }' \
+          -F o="$OWNER" -F r="$REPO" \
+          --jq '.data.repository.suggestedActors.nodes[] | select(.login=="copilot-swe-agent") | .id')
+
+        if [ -z "$ID" ]; then
+          echo "::error::copilot-swe-agent was not returned by suggestedActors for $OWNER/$REPO."
+          echo "::error::Confirm: (a) org policy enables Copilot coding agent, (b) repo is opted in, (c) PAT has the required scopes."
+          exit 1
+        fi
+
+        echo "id=$ID" >> "$GITHUB_OUTPUT"
+        echo "Resolved copilot-swe-agent bot id."
+
+    - name: Assign Copilot to the issue
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.pat }}
+        BOT_ID: ${{ steps.resolve.outputs.id }}
+        ISSUE_ID: ${{ inputs.issue-node-id }}
+      run: |
+        set -euo pipefail
+        gh api graphql \
+          -f query='mutation($a:ID!,$b:ID!){
+            replaceActorsForAssignable(input:{assignableId:$a, actorIds:[$b]}){
+              assignable { ... on Issue { number assignees(first:5){ nodes { login } } } }
+            }
+          }' \
+          -F a="$ISSUE_ID" -F b="$BOT_ID"
+        echo "Copilot assigned."
