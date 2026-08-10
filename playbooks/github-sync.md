@@ -33,6 +33,15 @@ Recommended label families:
 - `area:frontend`, `area:backend`, `area:infra`, ...
 - `agent:craft`, `agent:codex`, `agent:copilot`, `agent:gemini`
 - `status:planned`, `status:ready`, `status:blocked`, `status:in-progress`, `status:in-review`, `status:done`
+- **Autonomous-Copilot routing:** `agent-ready` (opt in, triggers dispatch) and `agent-blocked` (opt out, hard stop). See disambiguation below.
+
+### `agent:copilot` vs `agent-ready` — important disambiguation
+These two labels describe **different actors**:
+
+- **`agent:copilot`** (member of the `agent:*` family) means "a human engineer driving GitHub Copilot IDE assist owns this issue." The human is the author. Ownership follows `playbooks/claude-codex-copilot-gemini-operating-model.md`.
+- **`agent-ready`** (no colon, different family) means "route this issue to the autonomous GitHub Copilot coding agent, `copilot-swe-agent[bot]`." A workflow in the target repo picks this up and assigns the bot. The bot is the author. Ownership follows `playbooks/copilot-coding-agent.md`.
+
+Never apply both to the same issue. If a task is routed to the autonomous agent, drop `agent:copilot` and rely on `agent-ready` alone.
 
 ## State Transitions
 Suggested state flow:
@@ -82,3 +91,15 @@ When dispatching task batches to separate agents:
 - dispatch only independent tasks in the same batch,
 - avoid dispatching multiple tasks that compete for lock-zone files,
 - require each agent to post completion notes back to its issue or PR.
+
+## Autonomous Copilot Coding Agent
+
+When any task in the plan has `copilot_eligible: true`, follow `runbooks/route-to-copilot-agent.md` to dispatch. Key rules from `playbooks/copilot-coding-agent.md`:
+
+- **Never assign `copilot-swe-agent[bot]` directly from the planner.** The default `GITHUB_TOKEN` returns HTTP 422. Apply the `agent-ready` label only — the target repo's workflow handles assignment with its own PAT.
+- **Target repo must be Copilot-bootstrapped.** The files under [`templates/copilot-agent-bootstrap/`](../templates/copilot-agent-bootstrap/) must be on the target repo's default branch before labeling.
+- **Preflight the org policy.** Business/Enterprise orgs have Copilot coding agent disabled by default. Admin must enable it at the org level and opt in the target repo.
+- **Second reviewer required.** GitHub blocks the issue creator from being the final PR approver for agent-authored PRs.
+- **Never auto-approve** a Copilot draft PR.
+
+Track dispatches in the wave summary with a Dispatch Readiness line: `Dispatch: X human · Y copilot · Z blocked`.

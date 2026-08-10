@@ -45,6 +45,7 @@ When this skill is invoked, load these files before producing the plan.
 4. `playbooks/github-sync.md`
 5. `playbooks/claude-codex-copilot-gemini-operating-model.md` when the active stack matches that workflow
 6. `playbooks/openviking-memory-ops.md` when memory-aware swarm execution is requested
+7. `playbooks/copilot-coding-agent.md` when any task is marked `copilot_eligible: true` and should be routed to GitHub's autonomous Copilot coding agent (`copilot-swe-agent[bot]`) rather than a human worker
 
 ### Output scaffolds
 5. `templates/discovery-template.md`
@@ -55,6 +56,7 @@ When this skill is invoked, load these files before producing the plan.
 10. `templates/shared-contract-packet-template.md` when fresh worker CLI sessions must share frozen contracts
 11. `templates/cli-session-bootstrap-template.md` when launching a fresh Codex, Copilot, Gemini, or similar worker session
 12. `templates/validation-brief-template.md` when launching a dedicated validation session
+13. `templates/copilot-agent-bootstrap/` when a target repo must be prepared to accept autonomous Copilot coding agent dispatch (six drop-in files for the repo's `.github/` tree)
 
 ### Structured defaults
 10. `schemas/task-schema.json`
@@ -70,6 +72,7 @@ When this skill is invoked, load these files before producing the plan.
 18. `runbooks/memory-capture.md` when OpenViking-compatible memory records must be shaped
 19. `runbooks/launch-worker-session.md` when a fresh worker CLI session must be launched from a scoped handoff packet
 20. `runbooks/superset-workspace-bootstrap.md` when Superset setup/teardown automation should provision worker workspaces from generated packets
+21. `runbooks/route-to-copilot-agent.md` after `plan-to-github.md` has materialized issues, to apply the `agent-ready` label and dispatch `copilot_eligible` tasks to the autonomous Copilot coding agent
 
 ### Usage references
 21. `examples/sample-plan.md` when the user asks for a sample full plan
@@ -100,6 +103,7 @@ Before planning, choose the closest operating path:
 - use `runbooks/memory-capture.md` when OpenViking-compatible records or retrieval paths must be shaped
 - use `runbooks/launch-worker-session.md` when a fresh Codex, Copilot, Gemini, or similar CLI session must be started from a scoped handoff packet
 - use `runbooks/superset-workspace-bootstrap.md` when Superset should provision and clean up the worker workspace automatically
+- use `runbooks/route-to-copilot-agent.md` when a subset of tasks is marked `copilot_eligible: true` and should be dispatched to the autonomous GitHub Copilot coding agent
 
 If workflow selection is ambiguous, consult `machine-readable/workflows.yaml` before proceeding.
 
@@ -147,6 +151,11 @@ Required hierarchy:
 
 Use the schema in `schemas/task-schema.json` for every task.
 
+For each task, also decide routing:
+- Set `copilot_eligible: true` **only** when the task is well-scoped (concrete deliverable, testable acceptance, explicit files of interest), fits in one branch / one PR, avoids secrets and destructive infra, and the target repo is Copilot-bootstrapped. See `playbooks/copilot-coding-agent.md` for the full eligibility checklist.
+- Optionally set `copilot_role` (`frontend | backend | data | infra | qa | product`) as a hint for path-scoped agent instructions in the target repo.
+- Leave `copilot_eligible: false` (the default) for everything else — the human lane is always the safe fallback.
+
 ### 4. Enforce contract-first parallelism
 Before assigning parallel build work:
 - freeze API contracts,
@@ -171,9 +180,10 @@ When the user wants execution tracking:
 - map tasks to GitHub issues,
 - preserve dependencies in issue text/checklists/comments,
 - align phase/wave/swarm IDs with issue metadata,
-- and post concise wave summaries as work advances.
+- post concise wave summaries as work advances,
+- and, for any task with `copilot_eligible: true`, hand off to `runbooks/route-to-copilot-agent.md` after issue creation to apply the `agent-ready` label (the target repo's workflow does the bot assignment using its own `COPILOT_ASSIGN_PAT`).
 
-Use `playbooks/github-sync.md` and `templates/github-issue-template.md` as the canonical mapping rules.
+Use `playbooks/github-sync.md` and `templates/github-issue-template.md` as the canonical mapping rules. Use `playbooks/copilot-coding-agent.md` when routing to the autonomous Copilot coding agent.
 
 ### 7. Verify before declaring done
 Every wave must include dedicated validation tasks.
@@ -213,10 +223,13 @@ Unless the user overrides it, use this baseline split:
 Example mapping when available:
 - Claude can fill the planner / orchestrator role
 - Codex can fill the UI / app implementation role
-- Copilot can fill the cloud / backend role
+- Copilot (human + IDE assist) can fill the cloud / backend role
 - Gemini can fill the validation role
 
 Refine ownership using `schemas/agent-role-matrix.yaml` and `schemas/runtime-role-catalog.yaml`.
+
+### Autonomous alternative: Copilot coding agent
+For well-scoped tasks, the planner may bypass the human worker entirely and route the issue to GitHub's **autonomous Copilot coding agent** (`copilot-swe-agent[bot]`). This is a separate actor from "Copilot (human + IDE assist)" above — see `playbooks/copilot-coding-agent.md` §1 for the disambiguation, or the `agent:copilot` vs `agent-ready` distinction in `playbooks/github-sync.md`. A task is never owned by both at once.
 
 ## Definition of Done
 

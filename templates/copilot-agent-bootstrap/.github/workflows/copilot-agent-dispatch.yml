@@ -1,0 +1,59 @@
+# Copilot agent dispatch
+#
+# Routes issues labeled `agent-ready` to the Copilot coding agent by assigning
+# the `copilot-swe-agent[bot]` actor to them.
+#
+# Hard constraints from GitHub (verified April 2026):
+#   - The default GITHUB_TOKEN CANNOT assign the Copilot bot (returns HTTP 422).
+#     A PAT is mandatory. Store it as the repo secret `COPILOT_ASSIGN_PAT`.
+#   - The assignee login must be the EXACT string `copilot-swe-agent[bot]`.
+#     `copilot` and `copilot-swe-agent` both return 422.
+#   - `gh issue edit --add-assignee` is flaky for bot logins; use `gh api graphql` instead.
+#
+# PAT requirements:
+#   - Fine-grained PAT recommended. Repository access: only the target repo(s).
+#     Permissions: Actions (Read & write), Contents (Read & write),
+#     Issues (Read & write), Pull requests (Read & write), Metadata (Read).
+#   - Classic PAT also works with the `repo` scope.
+#   - Billing attaches to the PAT owner's Copilot seat — that owner must have
+#     Copilot Pro+ / Business / Enterprise.
+#
+# Skip path:
+#   - If the issue also carries `agent-blocked`, the job short-circuits.
+
+name: Copilot agent dispatch
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.label.name == 'agent-ready' &&
+      !contains(github.event.issue.labels.*.name, 'agent-blocked')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (for composite action)
+        uses: actions/checkout@v4
+
+      - name: Assign issue to Copilot
+        uses: ./.github/actions/assign-copilot
+        with:
+          issue-node-id: ${{ github.event.issue.node_id }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pat: ${{ secrets.COPILOT_ASSIGN_PAT }}
+
+      - name: Post dispatch comment
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_ASSIGN_PAT }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "🤖 Dispatched to \`copilot-swe-agent[bot]\` via the \`agent-ready\` label. The agent will open a draft PR shortly."

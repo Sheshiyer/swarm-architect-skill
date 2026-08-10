@@ -1,0 +1,82 @@
+# Copilot setup steps
+#
+# Preinstalls tools and dependencies into the ephemeral VM the Copilot coding
+# agent runs in. Hard constraints from GitHub:
+#   - Job MUST be named `copilot-setup-steps` (the orchestrator/cloud agent looks for this exact name).
+#   - Only these top-level job keys are honored: steps, permissions, runs-on, services, snapshot, timeout-minutes.
+#   - timeout-minutes must be <= 59.
+#   - Runner must be Ubuntu x64 or Windows 64-bit. macOS is NOT supported.
+#   - `actions/checkout` fetch-depth is silently overridden inside the agent VM.
+#   - Failures here do NOT abort the agent. It will start with a partial environment.
+#     So: fail loudly and early here rather than producing confusing agent diffs.
+#
+# Replace the install section with the stack your repo actually uses.
+
+name: "Copilot Setup Steps"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/copilot-setup-steps.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/copilot-setup-steps.yml"
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # --- Pick the stack block that matches this repo; delete the others. ---
+
+      # Bun + Node project
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies (Bun)
+        run: bun install --frozen-lockfile
+
+      # # pnpm + Node project
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "20"
+      # - name: Setup pnpm
+      #   uses: pnpm/action-setup@v4
+      #   with:
+      #     version: 9
+      # - name: Install dependencies (pnpm)
+      #   run: pnpm install --frozen-lockfile
+
+      # # Python + uv project
+      # - name: Setup Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: "3.12"
+      # - name: Install uv
+      #   uses: astral-sh/setup-uv@v3
+      # - name: Install dependencies (uv)
+      #   run: uv sync --frozen
+
+      # --- Optional system dependencies ---
+
+      # - name: Install system packages
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y sqlite3 libpq-dev
+
+      # --- Sanity checks (fail loud rather than let the agent inherit a broken env) ---
+
+      - name: Verify toolchain
+        run: |
+          set -euo pipefail
+          echo "Node: $(node --version 2>/dev/null || echo 'not installed')"
+          echo "Bun:  $(bun --version 2>/dev/null || echo 'not installed')"
+          echo "Python: $(python3 --version 2>/dev/null || echo 'not installed')"

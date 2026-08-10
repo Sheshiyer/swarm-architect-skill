@@ -60,6 +60,20 @@ OpenViking-ready fields and URI conventions make shared swarm memory explicit an
 
 </td>
 </tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🤖 Copilot-agent routing
+Well-scoped tasks can be flagged `copilot_eligible` and dispatched to GitHub's autonomous **Copilot coding agent** (`copilot-swe-agent[bot]`) via the `agent-ready` label — see [`playbooks/copilot-coding-agent.md`](./playbooks/copilot-coding-agent.md).
+
+</td>
+<td width="50%" valign="top">
+
+### 📦 Target-repo bootstrap bundle
+Drop-in `.github/` files under [`templates/copilot-agent-bootstrap/`](./templates/copilot-agent-bootstrap/) make any target repo agent-ready in one copy, including the setup workflow, label → assign workflow, composite action, and issue template.
+
+</td>
+</tr>
 </table>
 
 ## What's inside
@@ -291,11 +305,51 @@ Recommended flow:
 By default, this repo assumes the following stack:
 - **Claude** → planner / orchestrator
 - **Codex** → UI and app implementation
-- **Copilot** → backend, cloud, CI/CD, and deployment wiring
+- **Copilot** (human + IDE assist) → backend, cloud, CI/CD, and deployment wiring
 - **Gemini** → validation, regression analysis, and adversarial testing
 
 See:
 - [`playbooks/claude-codex-copilot-gemini-operating-model.md`](./playbooks/claude-codex-copilot-gemini-operating-model.md)
+
+## Autonomous alternative: GitHub Copilot coding agent
+
+For well-scoped tasks — concrete deliverable, testable acceptance criteria, explicit files of interest, one-branch/one-PR scope — the planner can bypass the human worker entirely and route the issue to GitHub's **autonomous Copilot coding agent** (`copilot-swe-agent[bot]`). This is a separate actor from "Copilot (human + IDE assist)" above.
+
+**Flow:**
+
+```
+task.copilot_eligible = true
+    │
+    ▼
+Issue created using templates/github-issue-template.md
+    │
+    ▼  apply `agent-ready` label (see runbooks/route-to-copilot-agent.md)
+Target repo's copilot-agent-dispatch.yml fires → assigns copilot-swe-agent[bot]
+    │
+    ▼  within minutes
+Draft PR opens, authored by the bot
+    │
+    ▼  reviewer comments `@copilot <instruction>` as needed
+Second reviewer approves and merges
+```
+
+**Pinned constants** (match the sibling copy in [`Sheshiyer/github-next-wave-orchestrator`](https://github.com/Sheshiyer/github-next-wave-orchestrator)):
+
+| Constant | Value |
+|---|---|
+| Bot login | `copilot-swe-agent[bot]` |
+| Opt-in label | `agent-ready` |
+| Opt-out label | `agent-blocked` |
+| PAT secret name | `COPILOT_ASSIGN_PAT` |
+
+**Key files:**
+
+- [`playbooks/copilot-coding-agent.md`](./playbooks/copilot-coding-agent.md) — the autonomous operating model, disambiguation from IDE-assist Copilot, eligibility checklist, preflight for Business/Enterprise orgs, and quirks.
+- [`runbooks/route-to-copilot-agent.md`](./runbooks/route-to-copilot-agent.md) — how the planner dispatches after `plan-to-github` has created issues.
+- [`templates/copilot-agent-bootstrap/`](./templates/copilot-agent-bootstrap/) — six drop-in files that make a target repo agent-ready.
+- [`schemas/task-schema.json`](./schemas/task-schema.json) — adds `copilot_eligible` (bool) and `copilot_role` (enum) to the task schema.
+
+**Caveat:** Swarm Architect never assigns the bot directly — the default `GITHUB_TOKEN` cannot (HTTP 422). The planner applies the `agent-ready` label and the target repo's workflow handles assignment with its own PAT.
 
 ## Execution model
 
